@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#e9e5d8">
+<title>Exam Countdown iPhone</title>
+<style>
+:root{--paper:#e9e5d8;--ink:#151512;--muted:#68665f;--red:#b43b30;--line:rgba(21,21,18,.30)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink)}
+body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Sans","Yu Gothic",sans-serif}
+.wrap{
+  min-height:100vh;
+  padding:max(18px,env(safe-area-inset-top))
+          max(18px,env(safe-area-inset-right))
+          max(18px,env(safe-area-inset-bottom))
+          max(18px,env(safe-area-inset-left));
+  display:flex;flex-direction:column;justify-content:space-between;gap:28px
+}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.brand{font-size:10px;letter-spacing:.20em;font-weight:800}
+.red{color:var(--red)}
+.date{font-size:11px;font-weight:700;color:var(--muted);text-align:right}
+.hero{margin-top:5vh}
+.kicker,.tag{font-size:10px;letter-spacing:.18em;font-weight:800;color:var(--muted)}
+.title{margin-top:6px;font-size:clamp(24px,8vw,36px);font-weight:850;line-height:1.1}
+.count{margin-top:18px}
+.days{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  font-variant-numeric:tabular-nums;
+  font-size:clamp(88px,26vw,132px);
+  line-height:.86;font-weight:800;letter-spacing:-.08em
+}
+.days-label{font-size:11px;letter-spacing:.22em;font-weight:900;color:var(--red);margin-top:6px}
+.rest{
+  margin-top:8px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  font-size:clamp(22px,6vw,30px);font-weight:800;font-variant-numeric:tabular-nums
+}
+.rule{height:4px;background:var(--ink);margin-top:24px}
+.target{margin-top:8px;font-size:11px;font-weight:700;color:var(--muted);display:flex;justify-content:space-between;gap:12px}
+.next{
+  margin-top:34px;border-top:1px solid var(--line);padding-top:12px
+}
+.next-name{margin-top:8px;font-size:clamp(22px,7vw,32px);font-weight:850;line-height:1.15}
+.next-date{margin-top:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:12px;font-weight:700;color:var(--muted)}
+.next-remain{
+  margin-top:18px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  font-size:clamp(30px,9vw,42px);font-weight:800;letter-spacing:-.04em
+}
+footer{display:flex;justify-content:space-between;gap:16px;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.13em}
+@media (min-width:600px){
+  .wrap{max-width:520px;margin:0 auto}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <header class="top">
+      <div class="brand"><span class="red">●</span> EXAM COUNTDOWN</div>
+      <div id="nowDate" class="date">—</div>
+    </header>
+
+    <section class="hero">
+      <div class="kicker">ENTRANCE EXAMINATION</div>
+      <div class="title">徳島北高校 入試まで</div>
+
+      <div class="count">
+        <div id="mainDays" class="days">—</div>
+        <div class="days-label">DAYS</div>
+        <div id="mainRest" class="rest">-- : -- : --</div>
+      </div>
+
+      <div class="rule"></div>
+      <div class="target">
+        <span>09 MAR 2027 · 08:30</span>
+        <span>JST</span>
+      </div>
+    </section>
+
+    <section class="next">
+      <div class="tag red">● NEXT EXAM IS...</div>
+      <div id="nextExamName" class="next-name">—</div>
+      <div id="nextExamDate" class="next-date">—</div>
+      <div id="nextExamRemain" class="next-remain">—</div>
+    </section>
+  </div>
+
+  <footer>
+    <span>TOKUSHIMA · JAPAN</span>
+    <span id="status">COUNTING DOWN</span>
+  </footer>
+</div>
+
+<script>
+(() => {
+  const entrance = Date.parse("2027-03-09T08:30:00+09:00");
+  const exams = [
+    {name:"進級テスト",date:"2026-04-10",time:"08:30"},
+    {name:"第1回実力テスト",date:"2026-04-27",time:"08:30"},
+    {name:"第2回実力テスト",date:"2026-06-01",time:"08:30"},
+    {name:"1学期末テスト",date:"2026-06-22",time:"08:30"},
+    {name:"第3回実力テスト",date:"2026-07-06",time:"08:30"},
+    {name:"第4回実力テスト",date:"2026-08-28",time:"08:30"},
+    {name:"第1回基礎学力テスト",date:"2026-10-07",time:"08:30"},
+    {name:"第5回実力テスト",date:"2026-10-26",time:"08:30"},
+    {name:"第2回基礎学力テスト",date:"2026-11-11",time:"08:30"},
+    {name:"2学期末テスト",date:"2026-11-24",time:"08:30"},
+    {name:"第6回実力テスト",rough:"2026年12月上旬"},
+    {name:"第3回基礎学力テスト",date:"2027-01-12",time:"08:30"},
+    {name:"第7回実力テスト",date:"2027-01-21",time:"08:30"},
+    {name:"卒業テスト",date:"2027-02-12",time:"08:30"},
+    {name:"直前テスト",date:"2027-02-24",time:"08:30"},
+    {name:"高校入試",date:"2027-03-09",time:"08:30"}
+  ];
+
+  const pad=n=>String(n).padStart(2,"0");
+  const monthEn=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+
+  function toMillis(item){
+    if(!item.date) return null;
+    return Date.parse(`${item.date}T${item.time||"00:00"}:00+09:00`);
+  }
+  function formatDate(item){
+    const [y,m,d]=item.date.split("-").map(Number);
+    return `${pad(d)} ${monthEn[m-1]} ${y} · ${item.time}`;
+  }
+  function parts(diff){
+    const total=Math.max(0,Math.floor(diff/1000));
+    return {
+      d:Math.floor(total/86400),
+      h:Math.floor((total%86400)/3600),
+      m:Math.floor((total%3600)/60),
+      s:total%60
+    };
+  }
+  function nextKnown(now){
+    return exams
+      .filter(x=>x.date && toMillis(x)>=now)
+      .sort((a,b)=>toMillis(a)-toMillis(b))[0];
+  }
+
+  function tick(){
+    const now=Date.now();
+    const main=parts(entrance-now);
+    document.getElementById("mainDays").textContent=main.d;
+    document.getElementById("mainRest").textContent=`${pad(main.h)} : ${pad(main.m)} : ${pad(main.s)}`;
+
+    const next=nextKnown(now);
+    if(next){
+      document.getElementById("nextExamName").textContent=next.name;
+      document.getElementById("nextExamDate").textContent=formatDate(next);
+      const r=parts(toMillis(next)-now);
+      document.getElementById("nextExamRemain").textContent=`${r.d}D ${pad(r.h)}:${pad(r.m)}:${pad(r.s)}`;
+    }else{
+      document.getElementById("nextExamName").textContent="試験日程終了";
+      document.getElementById("nextExamDate").textContent="—";
+      document.getElementById("nextExamRemain").textContent="—";
+    }
+
+    document.getElementById("nowDate").textContent=
+      new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit",weekday:"short"})
+      .format(new Date()).replaceAll("/",".");
+
+    if(now>=entrance) document.getElementById("status").textContent="EXAM DAY";
+  }
+
+  tick();
+  setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>
