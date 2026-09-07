@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#e9e5d8">
+<title>Exam Countdown iPhone</title>
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<style>
+:root{--paper:#efede4;--ink:#050505;--red:#f21c15;--line:rgba(0,0,0,.28)}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--paper);color:var(--ink)}
+body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Sans","Yu Gothic",sans-serif}
+.deck{position:fixed;inset:0;overflow:hidden;background:var(--paper);touch-action:pan-x}
+.page{position:absolute;inset:0;width:100%;height:100%;transition:transform .46s cubic-bezier(.22,.72,.2,1);will-change:transform;background:var(--paper)}
+.homePage{transform:translate3d(0,0,0)}
+.listPage{transform:translate3d(0,100%,0)}
+.deck.listActive .homePage{transform:translate3d(0,-100%,0)}
+.deck.listActive .listPage{transform:translate3d(0,0,0)}
+
+.homeShell{height:100%;display:flex;flex-direction:column;background:var(--paper);overflow:hidden}
+.dayBand{
+  height:max(87px,calc(env(safe-area-inset-top) + 68px));
+  padding-top:env(safe-area-inset-top);
+  background:#000;color:#f6f6f2;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:clamp(18px,5.3vw,25px);letter-spacing:.01em;white-space:nowrap
+}
+.homeBody{flex:1;min-height:0;padding:5.9vh 6.2vw 5.1vh;display:flex;flex-direction:column}
+.heroTitle{text-align:center;font-size:clamp(28px,8.5vw,40px);font-weight:900;line-height:1;margin-top:.8vh}
+.collage{
+  margin:8.4vh auto 0;width:100%;display:flex;justify-content:center;align-items:center;gap:3.7vw;
+}
+.digitCard{
+  position:relative;width:25.7vw;max-width:142px;height:28.5vw;max-height:160px;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.digitCard:nth-child(1){background:#cdb18b;transform:rotate(-1.2deg);clip-path:polygon(3% 2%,97% 0,96% 97%,0 100%)}
+.digitCard:nth-child(2){background:#dda900;transform:rotate(-2.1deg);clip-path:polygon(0 4%,96% 0,100% 96%,5% 100%)}
+.digitCard:nth-child(3){background:#efe3d2;transform:rotate(.8deg);clip-path:polygon(2% 0,96% 4%,100% 100%,0 96%)}
+.heroDigit{
+  font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;font-size:clamp(92px,27vw,154px);
+  line-height:.78;font-weight:900;letter-spacing:-.09em;transform:scaleX(.88);
+}
+.digitCard:nth-child(1) .heroDigit{color:#063f5b}
+.digitCard:nth-child(2) .heroDigit{color:#0b0b0b}
+.digitCard:nth-child(3) .heroDigit{color:#0b0b0b}
+.daysWord{
+  margin-top:4.1vh;text-align:center;font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;
+  font-size:clamp(38px,10vw,56px);line-height:1;font-weight:900;letter-spacing:-.035em
+}
+.restTime{
+  margin-top:3.3vh;text-align:center;font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;
+  font-size:clamp(30px,8.3vw,44px);line-height:1;font-weight:900;letter-spacing:.035em;white-space:nowrap
+}
+.nextBlock{margin-top:auto;padding-top:6vh}
+.nextTag{font-size:clamp(18px,5.3vw,26px);font-weight:900;line-height:1;letter-spacing:-.02em}
+.nextLine{margin-top:1.1vh;display:flex;align-items:flex-end;justify-content:space-between;gap:2.5vw;white-space:nowrap}
+.nextName{
+  min-width:0;overflow:hidden;text-overflow:ellipsis;
+  font-size:clamp(29px,8vw,42px);font-weight:900;line-height:1;letter-spacing:-.045em
+}
+.nextRemain{display:flex;align-items:flex-end;gap:.4vw;flex:0 0 auto}
+.nextRemain .num{color:var(--red);font-size:clamp(35px,9.8vw,49px);font-weight:900;line-height:.82;letter-spacing:-.06em}
+.nextRemain .label{font-size:clamp(28px,7.7vw,40px);font-weight:900;line-height:.82;letter-spacing:-.055em}
+.nextDate{margin-top:1.2vh;font-size:clamp(17px,4.8vw,24px);font-weight:800;line-height:1}
+.swipeHint{position:absolute;bottom:1.2vh;left:50%;transform:translateX(-50%);font-size:9px;font-weight:800;letter-spacing:.16em;color:rgba(0,0,0,.24);white-space:nowrap}
+
+/* Editorial exam list */
+.schedule{
+  height:100%;padding:max(24px,env(safe-area-inset-top)) 20px max(22px,env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;background:var(--paper)
+}
+.scheduleHead{border-top:5px solid var(--ink);border-bottom:2px solid var(--ink);padding:15px 0 13px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.scheduleTitle{font-size:clamp(28px,8vw,38px);font-weight:900;line-height:.9;letter-spacing:-.04em}
+.scheduleSub{font-size:9px;font-weight:800;letter-spacing:.14em;color:#68665f;white-space:nowrap}
+.scheduleList{border-bottom:2px solid var(--ink);overflow:auto;-webkit-overflow-scrolling:touch;flex:1}
+.examRow{min-height:92px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:11px 2px 11px 10px;position:relative}
+.examRow:last-child{border-bottom:0}
+.examRow:before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:4px;background:var(--red)}
+.examMeta{min-width:0}.examDate{font-size:11px;font-weight:800;color:#68665f;margin-bottom:6px}.examName{font-size:clamp(17px,5vw,22px);font-weight:850;line-height:1.1;letter-spacing:-.025em}
+.examCount{display:flex;align-items:flex-end;gap:5px;white-space:nowrap}.examDays{font-size:clamp(40px,12vw,54px);font-weight:900;line-height:.82;letter-spacing:-.08em}.examLabel{font-size:9px;font-weight:900;letter-spacing:.09em;padding-bottom:2px}
+.scheduleFoot{padding-top:13px;display:flex;justify-content:space-between;color:#68665f;font-size:9px;font-weight:800;letter-spacing:.12em}
+@media (min-width:600px){.homeBody,.schedule{max-width:520px;margin-left:auto;margin-right:auto;width:100%}}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+  <section class="page homePage">
+    <div class="homeShell">
+      <div class="dayBand">THE DAY 2027.03.09 TUE</div>
+      <div class="homeBody">
+        <div class="heroTitle">高校入試まで</div>
+
+        <div class="collage" id="collageDays">
+          <div class="digitCard"><span class="heroDigit">1</span></div>
+          <div class="digitCard"><span class="heroDigit">8</span></div>
+          <div class="digitCard"><span class="heroDigit">2</span></div>
+        </div>
+
+        <div class="daysWord">DAYS</div>
+        <div id="mainRest" class="restTime">-- : -- : --</div>
+
+        <div class="nextBlock">
+          <div class="nextTag">NEXT EXAM is...</div>
+          <div class="nextLine">
+            <div id="nextExamName" class="nextName">—</div>
+            <div class="nextRemain"><span id="nextExamDays" class="num">—</span><span class="label">DAYS</span></div>
+          </div>
+          <div id="nextExamDate" class="nextDate">—</div>
+        </div>
+      </div>
+      <div class="swipeHint">SWIPE ↑ EXAM SCHEDULE</div>
+    </div>
+  </section>
+
+  <section class="page listPage">
+    <div class="schedule">
+      <header class="scheduleHead">
+        <div class="scheduleTitle">EXAM<br>SCHEDULE</div>
+        <div class="scheduleSub">TEST / COUNTDOWN</div>
+      </header>
+      <div class="scheduleList" id="scheduleList"></div>
+      <div class="scheduleFoot"><span>UPCOMING TESTS</span><span>SWIPE ↓ BACK</span></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const entrance=Date.parse("2027-03-09T08:30:00+09:00");
+  const exams=[
+    {name:"進級テスト",date:"2026-04-10",time:"08:30"},
+    {name:"第1回実力テスト",date:"2026-04-27",time:"08:30"},
+    {name:"第2回実力テスト",date:"2026-06-01",time:"08:30"},
+    {name:"1学期末テスト",date:"2026-06-22",time:"08:30"},
+    {name:"第3回実力テスト",date:"2026-07-06",time:"08:30"},
+    {name:"第4回実力テスト",date:"2026-08-28",time:"08:30"},
+    {name:"第1回基礎学力テスト",date:"2026-10-07",time:"08:30"},
+    {name:"第5回実力テスト",date:"2026-10-26",time:"08:30"},
+    {name:"第2回基礎学力テスト",date:"2026-11-11",time:"08:30"},
+    {name:"2学期末テスト",date:"2026-11-24",time:"08:30"},
+    {name:"第6回実力テスト",rough:"2026年12月上旬"},
+    {name:"第3回基礎学力テスト",date:"2027-01-12",time:"08:30"},
+    {name:"第7回実力テスト",date:"2027-01-21",time:"08:30"},
+    {name:"卒業テスト",date:"2027-02-12",time:"08:30"},
+    {name:"直前テスト",date:"2027-02-24",time:"08:30"},
+    {name:"高校入試",date:"2027-03-09",time:"08:30"}
+  ];
+  const pad=n=>String(n).padStart(2,"0");
+  const monthEn=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  const weekJa=["日","月","火","水","木","金","土"];
+  const toMillis=item=>item.date?Date.parse(`${item.date}T${item.time||"08:30"}:00+09:00`):null;
+  const parts=diff=>{const t=Math.max(0,Math.floor(diff/1000));return{d:Math.floor(t/86400),h:Math.floor((t%86400)/3600),m:Math.floor((t%3600)/60),s:t%60}};
+  const nextKnown=now=>exams.filter(x=>x.date&&toMillis(x)>=now).sort((a,b)=>toMillis(a)-toMillis(b))[0];
+
+  function formatDate(item){
+    const [y,m,d]=item.date.split("-").map(Number);
+    const wd=weekJa[new Date(`${item.date}T12:00:00+09:00`).getDay()];
+    return `${y} 年 ${m} 月 ${d} 日（${wd}）`;
+  }
+  function renderList(now){
+    const box=document.getElementById("scheduleList");
+    const future=exams.filter(x=>x.date&&toMillis(x)>=now).sort((a,b)=>toMillis(a)-toMillis(b));
+    box.innerHTML=future.map(x=>{
+      const [y,m,d]=x.date.split("-").map(Number);
+      const wd=weekJa[new Date(`${x.date}T12:00:00+09:00`).getDay()];
+      /* Same exact countdown basis as NEXT EXAM: target date/time minus current instant, floor to whole days. */
+      const days=parts(toMillis(x)-now).d;
+      return `<div class="examRow">
+        <div class="examMeta">
+          <div class="examDate">${y}.${pad(m)}.${pad(d)} ${wd}</div>
+          <div class="examName">${x.name}</div>
+        </div>
+        <div class="examCount"><span class="examDays">${days}</span><span class="examLabel">DAYS</span></div>
+      </div>`;
+    }).join("");
+  }
+
+  function tick(){
+    const now=Date.now(),main=parts(entrance-now);
+    const digits=String(main.d).padStart(3,"0").slice(-3);
+    document.querySelectorAll("#collageDays .heroDigit").forEach((el,i)=>el.textContent=digits[i]);
+    document.getElementById("mainRest").textContent=`${pad(main.h)} : ${pad(main.m)} : ${pad(main.s)}`;
+    const next=nextKnown(now);
+    if(next){
+      document.getElementById("nextExamName").textContent=next.name;
+      document.getElementById("nextExamDate").textContent=formatDate(next);
+      const r=parts(toMillis(next)-now);
+      document.getElementById("nextExamDays").textContent=r.d;
+    }else{
+      document.getElementById("nextExamName").textContent="試験日程終了";
+      document.getElementById("nextExamDate").textContent="—";
+      document.getElementById("nextExamDays").textContent="—";
+    }
+  }
+
+  let face=0,startX=0,startY=0,tracking=false;
+  const deck=document.getElementById("deck");
+  function setFace(n){face=Math.max(0,Math.min(1,n));deck.classList.toggle("listActive",face===1);if(face===1)renderList(Date.now())}
+  deck.addEventListener("touchstart",e=>{if(e.touches.length!==1)return;startX=e.touches[0].clientX;startY=e.touches[0].clientY;tracking=true},{passive:true});
+  deck.addEventListener("touchend",e=>{
+    if(!tracking)return;tracking=false;
+    const t=e.changedTouches[0],dx=t.clientX-startX,dy=t.clientY-startY;
+    if(Math.abs(dy)>55&&Math.abs(dy)>Math.abs(dx)*1.15)setFace(face+(dy<0?1:-1));
+  },{passive:true});
+
+  tick(); renderList(Date.now());
+  setInterval(tick,1000);
+  setInterval(()=>{if(face===1)renderList(Date.now())},60000);
+})();
+</script>
+</body>
+</html>
