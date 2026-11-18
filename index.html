@@ -41,9 +41,14 @@ body{
   will-change:transform;background:var(--paper)
 }
 .homePage{transform:translate3d(0,0,0)}
-.listPage{transform:translate3d(0,100%,0)}
+.quotaPage{transform:translate3d(0,100%,0)}
+.listPage{transform:translate3d(0,200%,0)}
 .deck.listActive .homePage{transform:translate3d(0,-100%,0)}
-.deck.listActive .listPage{transform:translate3d(0,0,0)}
+.deck.listActive .quotaPage{transform:translate3d(0,0,0)}
+.deck.listActive .listPage{transform:translate3d(0,100%,0)}
+.deck.surveyActive .homePage{transform:translate3d(0,-200%,0)}
+.deck.surveyActive .quotaPage{transform:translate3d(0,-100%,0)}
+.deck.surveyActive .listPage{transform:translate3d(0,0,0)}
 
 .homeShell{
   height:100%;display:flex;flex-direction:column;
@@ -328,6 +333,53 @@ body{
   .homeBody,.schedule{max-width:520px;margin-left:auto;margin-right:auto;width:100%}
 }
 
+
+/* iPhone: 9-track portrait comparison cards */
+.compareShell{height:100%;display:flex;flex-direction:column;min-height:0;padding:max(18px,env(safe-area-inset-top)) 14px max(12px,env(safe-area-inset-bottom));background:var(--paper)}
+.compareHead{flex:none;border-top:5px solid #111;border-bottom:2px solid #111;padding:9px 2px 10px}
+.compareKicker{font-size:10px;font-weight:900;letter-spacing:.1em;color:var(--muted)}
+.compareHead h1{font-size:clamp(29px,8.4vw,39px);font-weight:900;letter-spacing:-.045em;margin:4px 0 2px;line-height:1.1}
+.compareHead p{font-size:11px;font-weight:700;margin:0;color:var(--muted)}
+.compareList{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:9px 0 8px;display:flex;flex-direction:column;gap:8px;overscroll-behavior:contain}
+.compareCard{flex:none;background:#fffdf7;border:1px solid rgba(0,0,0,.16);border-left:5px solid #222;border-radius:9px;padding:10px 11px 9px;box-shadow:0 2px 0 rgba(0,0,0,.06)}
+.compareCard.kita{background:#f8e7e4;border-left-color:#d4443a}
+.compareCard.johoku{background:#e4eef9;border-left-color:#2879b9}
+.compareCardHead{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:8px}
+.compareSchool{font-size:clamp(14px,4.15vw,18px);line-height:1.25;font-weight:900;letter-spacing:-.035em;min-width:0}
+.compareRate{font-size:clamp(23px,7vw,31px);font-family:"Arial Black","Helvetica Neue",sans-serif;line-height:1;white-space:nowrap;font-weight:900;letter-spacing:-.055em}
+.compareMetrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;border-top:1px solid rgba(0,0,0,.15);padding-top:7px}
+.compareMetric small{display:block;font-size:10px;font-weight:800;color:#58534e;margin-bottom:2px}
+.compareMetric strong{display:block;font-size:clamp(15px,4.55vw,20px);font-weight:900;white-space:nowrap;letter-spacing:-.04em}
+.compareReduction{font-size:11px;font-weight:800;color:#4c4844;margin-top:7px}
+.compareFoot{flex:none;border-top:1px solid #111;padding:7px 2px 0;font-size:9px;line-height:1.4;font-weight:700;color:var(--muted)}
+.compareFoot span{display:block;text-align:right;letter-spacing:.12em;margin-top:2px}
+@media (max-width:360px){.compareCard{padding:9px 8px}.compareMetrics{gap:3px}.compareMetric strong{font-size:14px}.compareSchool{font-size:14px}}
+
+
+/* Four-track quota comparison, adapted from iPad page 2 */
+.quotaShell{height:100%;display:flex;flex-direction:column;min-height:0;padding:max(18px,env(safe-area-inset-top)) 14px max(12px,env(safe-area-inset-bottom));background:var(--paper)}
+.quotaHead{border-top:5px solid #111;border-bottom:2px solid #111;padding:9px 2px 10px;flex:none}
+.quotaHead h1{font-size:clamp(27px,8vw,38px);font-weight:900;letter-spacing:-.05em;line-height:1.1;margin:4px 0 3px}
+.quotaHead p{font-size:11px;font-weight:750;color:var(--muted);margin:0}
+.quotaKicker{font-size:10px;font-weight:900;letter-spacing:.1em;color:var(--muted)}
+.quotaCards{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:9px;padding:10px 0}
+.quotaCard{flex:1 0 auto;min-height:130px;border:1px solid rgba(0,0,0,.16);border-left:5px solid #222;border-radius:9px;padding:11px 12px 10px;background:#fffdf7;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.quotaCard.north{background:#f8e7e4;border-left-color:#d4443a}
+.quotaCard.johoku{background:#e4eef9;border-left-color:#2879b9}
+.quotaCardName{font-size:clamp(17px,5vw,22px);font-weight:900;line-height:1.15}
+.quotaCardName small{font-size:.78em}
+.quotaCardMain{display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(0,0,0,.16);padding-bottom:4px}
+.quotaCardMain span{font-size:12px;font-weight:800}
+.quotaCardMain strong{font-size:clamp(28px,8.5vw,39px);font-weight:900;line-height:1;white-space:nowrap}
+.quotaCardMain strong small{font-size:.5em}
+.quotaCardDetail{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:11px;font-weight:800}
+.quotaCardDetail b{font-size:clamp(14px,4vw,18px);white-space:nowrap}
+.quotaCardBottom{font-size:11px;font-weight:800}
+.quotaCardBottom b{font-size:15px}
+.quotaFoot{flex:none;border-top:1px solid #111;padding:7px 2px 0;font-size:9px;line-height:1.45;font-weight:700;color:var(--muted)}
+.quotaFoot span{display:block;text-align:right;letter-spacing:.12em;margin-top:3px}
+@media(max-height:740px){.quotaCard{min-height:118px;padding:8px 10px}.quotaCards{gap:6px}}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -337,7 +389,7 @@ body{
 <div class="deck" id="deck">
   <section class="page homePage">
     <div class="homeShell">
-      <div class="dayBand">THE DAY 2027.03.09 TUE</div>
+      <div class="dayBand">THE DAY 2027.03.03 WED</div>
       <div class="homeBody">
         <div class="heroTitle">高校入試まで</div>
 
@@ -363,25 +415,40 @@ body{
           <div id="nextExamDate" class="nextDate">—</div>
         </div>
       </div>
-      <div class="swipeHint">SWIPE ↑ EXAM SCHEDULE</div>
+      <div class="swipeHint">SWIPE ↑ 高校入試情報</div>
+    </div>
+  </section>
+
+
+  <section class="page quotaPage">
+    <div class="quotaShell">
+      <header class="quotaHead"><div class="quotaKicker">2027 ADMISSIONS / 募集枠比較</div><h1>高校入試情報</h1><p>普通科は学区外枠で比較 ／ 数字は割合による計算値</p></header>
+      <div class="quotaCards">
+        <article class="quotaCard north"><div class="quotaCardName">徳島北高校 <small>普通科・学区外</small></div><div class="quotaCardMain"><span>学区外上限 17%</span><strong>39.1<small>人</small></strong></div><div class="quotaCardDetail"><span>育成型による定員の減少上限</span><b>最大−6.9人</b></div><div class="quotaCardBottom">一般選抜の学区外枠・最少目安　<b>32.2人</b></div></article>
+        <article class="quotaCard north"><div class="quotaCardName">徳島北高校 <small>国際英語科</small></div><div class="quotaCardMain"><span>学科定員</span><strong>40<small>人</small></strong></div><div class="quotaCardDetail"><span>育成型による定員の減少上限</span><b>―</b></div><div class="quotaCardBottom">比較上は育成型による減少を考慮しない</div></article>
+        <article class="quotaCard johoku"><div class="quotaCardName">城北高校 <small>理数科学科</small></div><div class="quotaCardMain"><span>学科定員</span><strong>30<small>人</small></strong></div><div class="quotaCardDetail"><span>育成型による定員の減少上限</span><b>―</b></div><div class="quotaCardBottom">比較上は育成型による減少を考慮しない</div></article>
+        <article class="quotaCard johoku"><div class="quotaCardName">城北高校 <small>普通科・学区外</small></div><div class="quotaCardMain"><span>学区外上限 17%</span><strong>40.8<small>人</small></strong></div><div class="quotaCardDetail"><span>育成型による定員の減少上限</span><b>最大−7.2人</b></div><div class="quotaCardBottom">一般選抜の学区外枠・最少目安　<b>33.6人</b></div></article>
+      </div>
+      <footer class="quotaFoot">※普通科の人数は定員×17%・3%・14%の理論値。実際の募集人数ではありません。専門学科の40人・30人も一般選抜の確定枠ではありません。<span>SWIPE ↑ 9学科比較</span></footer>
     </div>
   </section>
 
   <section class="page listPage">
-    <div class="schedule">
-      <header class="scheduleHead">
-        <div class="scheduleTitleWrap"><span class="scheduleTitleTape"></span><div class="scheduleTitle">EXAM SCHEDULE</div></div>
-        <div class="scheduleSub">TEST / COUNTDOWN</div>
+    <div class="compareShell">
+      <header class="compareHead">
+        <div class="compareKicker">2026.09.04 / 進学希望調査</div>
+        <h1>9学科 比較</h1>
+        <p>定員・枠と希望者数から見る参考倍率</p>
       </header>
-      <div class="scheduleList" id="scheduleList"></div>
-      <div class="scheduleFoot"><span>UPCOMING TESTS</span><span>SWIPE ↓ BACK</span></div>
+      <div class="compareList" id="compareList"></div>
+      <footer class="compareFoot">※学区外枠・減少上限は割合から算出した理論値。実際の募集人数・倍率とは異なります。<span>SWIPE ↓ 高校入試情報</span></footer>
     </div>
   </section>
 </div>
 
 <script>
 (() => {
-  const entrance=Date.parse("2027-03-09T08:30:00+09:00");
+  const entrance=Date.parse("2027-03-03T08:30:00+09:00");
   const exams=[
     {name:"進級テスト",date:"2026-04-10",time:"08:30"},
     {name:"第1回実力テスト",date:"2026-04-27",time:"08:30"},
@@ -398,7 +465,7 @@ body{
     {name:"第7回実力テスト",date:"2027-01-21",time:"08:30"},
     {name:"卒業テスト",date:"2027-02-12",time:"08:30"},
     {name:"直前テスト",date:"2027-02-24",time:"08:30"},
-    {name:"高校入試",date:"2027-03-09",time:"08:30"}
+    {name:"高校入試",date:"2027-03-03",time:"08:30"}
   ];
   const pad=n=>String(n).padStart(2,"0");
   const monthEn=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
@@ -412,22 +479,28 @@ body{
     const wd=weekJa[new Date(`${item.date}T12:00:00+09:00`).getDay()];
     return `${y} 年 ${m} 月 ${d} 日（${wd}）`;
   }
-  function renderList(now){
-    const box=document.getElementById("scheduleList");
-    const future=exams.filter(x=>x.date&&toMillis(x)>=now).sort((a,b)=>toMillis(a)-toMillis(b));
-    box.innerHTML=future.map(x=>{
-      const [y,m,d]=x.date.split("-").map(Number);
-      const wd=weekJa[new Date(`${x.date}T12:00:00+09:00`).getDay()];
-      /* Same exact countdown basis as NEXT EXAM: target date/time minus current instant, floor to whole days. */
-      const days=parts(toMillis(x)-now).d;
-      return `<div class="examRow">
-        <div class="examMeta">
-          <div class="examDate">${y}.${pad(m)}.${pad(d)} ${wd}</div>
-          <div class="examName">${x.name}</div>
-        </div>
-        <div class="examCount"><span class="examDays">${days}</span><span class="examLabel">DAYS</span></div>
-      </div>`;
-    }).join("");
+  const comparisonTracks=[
+    {school:"徳島北・普通科（学区外）",quota:"39.1人",reduction:"最大−6.9人",hope:"89人",diff:"+49.9人",rate:"2.28倍",tone:"kita"},
+    {school:"徳島北・国際英語科",quota:"40人",reduction:"―",hope:"43人",diff:"+3人",rate:"1.08倍",tone:"kita"},
+    {school:"城北・理数科学科",quota:"30人",reduction:"―",hope:"20人",diff:"−10人",rate:"0.67倍",tone:"johoku"},
+    {school:"城北・普通科（学区外）",quota:"40.8人",reduction:"最大−7.2人",hope:"67人",diff:"+26.2人",rate:"1.64倍",tone:"johoku"},
+    {school:"城東・普通科（全県一区）",quota:"280人",reduction:"―",hope:"341人",diff:"+61人",rate:"1.22倍",tone:""},
+    {school:"徳島市立・普通科（学区外）",quota:"22.4人",reduction:"最大−5.6人",hope:"37人",diff:"+14.6人",rate:"1.65倍",tone:""},
+    {school:"徳島市立・理数科",quota:"40人",reduction:"―",hope:"47人",diff:"+7人",rate:"1.18倍",tone:""},
+    {school:"城南・応用数理科",quota:"30人",reduction:"―",hope:"23人",diff:"−7人",rate:"0.77倍",tone:""},
+    {school:"城南・普通科（学区外）",quota:"40.8人",reduction:"最大−7.2人",hope:"64人",diff:"+23.2人",rate:"1.57倍",tone:""}
+  ];
+  function renderList(){
+    const box=document.getElementById("compareList");
+    box.innerHTML=comparisonTracks.map((x,i)=>`<article class="compareCard ${x.tone}">
+      <div class="compareCardHead"><div class="compareSchool">${i+1}. ${x.school}</div><div class="compareRate">${x.rate}</div></div>
+      <div class="compareMetrics">
+        <div class="compareMetric"><small>定員・枠</small><strong>${x.quota}</strong></div>
+        <div class="compareMetric"><small>希望者</small><strong>${x.hope}</strong></div>
+        <div class="compareMetric"><small>過不足</small><strong>${x.diff}</strong></div>
+      </div>
+      <div class="compareReduction">育成型による減少上限：${x.reduction}</div>
+    </article>`).join("");
   }
 
 
@@ -543,7 +616,7 @@ body{
 
   let face=0,startX=0,startY=0,tracking=false;
   const deck=document.getElementById("deck");
-  function setFace(n){face=Math.max(0,Math.min(1,n));deck.classList.toggle("listActive",face===1);if(face===1)renderList(Date.now())}
+  function setFace(n){face=Math.max(0,Math.min(2,n));deck.classList.toggle("listActive",face===1);deck.classList.toggle("surveyActive",face===2);if(face===2)renderList(Date.now())}
   deck.addEventListener("touchstart",e=>{if(e.touches.length!==1)return;startX=e.touches[0].clientX;startY=e.touches[0].clientY;tracking=true},{passive:true});
   deck.addEventListener("touchend",e=>{
     if(!tracking)return;tracking=false;
@@ -553,7 +626,7 @@ body{
 
   tick(); renderList(Date.now());
   setInterval(tick,1000);
-  setInterval(()=>{if(face===1)renderList(Date.now())},60000);
+  setInterval(()=>{if(face===2)renderList(Date.now())},60000);
 })();
 </script>
 </body>
