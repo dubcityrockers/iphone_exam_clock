@@ -380,6 +380,7 @@ body{
 .quotaFoot span{display:block;text-align:right;letter-spacing:.12em;margin-top:3px}
 @media(max-height:740px){.quotaCard{min-height:118px;padding:8px 10px}.quotaCards{gap:6px}}
 
+ .priorYear{margin-top:4px;font-size:11px;font-weight:800}.priorYear b{font-size:14px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -424,12 +425,12 @@ body{
     <div class="quotaShell">
       <header class="quotaHead"><div class="quotaKicker">2027 ADMISSIONS / 募集枠比較</div><h1>高校入試情報</h1><p>普通科は学区外枠で比較 ／ 数字は割合による計算値</p></header>
       <div class="quotaCards">
-        <article class="quotaCard north"><div class="quotaCardName">徳島北高校 <small>普通科・学区外</small></div><div class="quotaCardMain"><span>学区外上限 17%</span><strong>39.1<small>人</small></strong></div><div class="quotaCardDetail"><span>育成型による定員の減少上限</span><b>最大−6.9人</b></div><div class="quotaCardBottom">一般選抜の学区外枠・最少目安　<b>32.2人</b></div></article>
+        <article class="quotaCard north"><div class="quotaCardName">徳島北高校 <small>普通科・学区外</small></div><div class="quotaCardMain"><span>学区外上限 17%</span><strong>39.1<small>人</small></strong></div><div class="quotaCardDetail"><span>育成型による定員の減少上限</span><b>最大−6.9人</b></div><div class="quotaCardBottom">一般選抜の学区外枠・最少目安　<b>32.2人</b><div class="priorYear">前年・育成型の学区外合格：<b>4人</b></div></div></article>
         <article class="quotaCard north"><div class="quotaCardName">徳島北高校 <small>国際英語科</small></div><div class="quotaCardMain"><span>学科定員</span><strong>40<small>人</small></strong></div><div class="quotaCardDetail"><span>育成型による定員の減少上限</span><b>―</b></div><div class="quotaCardBottom">比較上は育成型による減少を考慮しない</div></article>
         <article class="quotaCard johoku"><div class="quotaCardName">城北高校 <small>理数科学科</small></div><div class="quotaCardMain"><span>学科定員</span><strong>30<small>人</small></strong></div><div class="quotaCardDetail"><span>育成型による定員の減少上限</span><b>―</b></div><div class="quotaCardBottom">比較上は育成型による減少を考慮しない</div></article>
-        <article class="quotaCard johoku"><div class="quotaCardName">城北高校 <small>普通科・学区外</small></div><div class="quotaCardMain"><span>学区外上限 17%</span><strong>40.8<small>人</small></strong></div><div class="quotaCardDetail"><span>育成型による定員の減少上限</span><b>最大−7.2人</b></div><div class="quotaCardBottom">一般選抜の学区外枠・最少目安　<b>33.6人</b></div></article>
+        <article class="quotaCard johoku"><div class="quotaCardName">城北高校 <small>普通科・学区外</small></div><div class="quotaCardMain"><span>学区外上限 17%</span><strong>40.8<small>人</small></strong></div><div class="quotaCardDetail"><span>育成型による定員の減少上限</span><b>最大−7.2人</b></div><div class="quotaCardBottom">一般選抜の学区外枠・最少目安　<b>33.6人</b><div class="priorYear">前年・育成型の学区外合格：<b>2人</b></div></div></article>
       </div>
-      <footer class="quotaFoot">※普通科の人数は定員×17%・3%・14%の理論値。実際の募集人数ではありません。専門学科の40人・30人も一般選抜の確定枠ではありません。<span>SWIPE ↑ 9学科比較</span></footer>
+      <footer class="quotaFoot">※普通科の人数は定員×17%・3%・14%の理論値。実際の募集人数ではありません。前年実績は令和8年度で、令和9年度の予測ではありません。専門学科の40人・30人も一般選抜の確定枠ではありません。<span>SWIPE ↑ 9学科比較</span></footer>
     </div>
   </section>
 
@@ -449,30 +450,69 @@ body{
 <script>
 (() => {
   const entrance=Date.parse("2027-03-03T08:30:00+09:00");
-  const exams=[
-    {name:"進級テスト",date:"2026-04-10",time:"08:30"},
-    {name:"第1回実力テスト",date:"2026-04-27",time:"08:30"},
-    {name:"第2回実力テスト",date:"2026-06-01",time:"08:30"},
-    {name:"1学期末テスト",date:"2026-06-22",time:"08:30"},
-    {name:"第3回実力テスト",date:"2026-07-06",time:"08:30"},
-    {name:"第4回実力テスト",date:"2026-08-28",time:"08:30"},
-    {name:"第1回基礎学力テスト",date:"2026-10-07",time:"08:30"},
-    {name:"第5回実力テスト",date:"2026-10-26",time:"08:30"},
-    {name:"第2回基礎学力テスト",date:"2026-11-11",time:"08:30"},
-    {name:"2学期末テスト",date:"2026-11-24",time:"08:30"},
-    {name:"第6回実力テスト",rough:"2026年12月上旬"},
-    {name:"第3回基礎学力テスト",date:"2027-01-12",time:"08:30"},
-    {name:"第7回実力テスト",date:"2027-01-21",time:"08:30"},
-    {name:"卒業テスト",date:"2027-02-12",time:"08:30"},
-    {name:"直前テスト",date:"2027-02-24",time:"08:30"},
-    {name:"高校入試",date:"2027-03-03",time:"08:30"}
-  ];
+  // iPad版と同じGoogleカレンダーから試験予定を取得する。
+  const GOOGLE_CALENDAR_ID="35bebd3125894b47492d372fa8948ac77ca7512fb297e42907e015f2e10d2abe@group.calendar.google.com";
+  const GOOGLE_API_KEY="AIzaSyDUAkrxeNxnbUOKzEo4fJkP-au9yAgmNXw";
+  let exams=[];
+  let calendarState="loading";
+  const examPattern=/テスト|試験|模試|英検|漢検|数検|考査|基礎学力/;
+  function classifyGoogleEvent(title){
+    const raw=(title||"").trim();
+    const prefix=raw.match(/^\s*(?:【|\[)?(TEST|EXAM|SCHOOL|CAREER|LESSON|FAMILY)(?:】|\])?\s*[｜|:：\-–—]?\s*/i);
+    if(prefix){
+      const tag=prefix[1].toUpperCase();
+      return {name:raw.slice(prefix[0].length).trim()||raw,isExam:tag==="TEST"||tag==="EXAM"};
+    }
+    return {name:raw,isExam:examPattern.test(raw)};
+  }
+  function googleDateKey(ev){
+    if(ev.start?.date) return ev.start.date;
+    if(!ev.start?.dateTime) return null;
+    return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date(ev.start.dateTime));
+  }
+  function googleTime(ev){
+    if(!ev.start?.dateTime) return "08:30";
+    return new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(ev.start.dateTime));
+  }
+  async function loadGoogleCalendar(){
+    try{
+      const now=new Date();
+      const min=new Date(Date.UTC(now.getUTCFullYear()-1,0,1)).toISOString();
+      const max=new Date(Date.UTC(now.getUTCFullYear()+2,11,31,23,59,59)).toISOString();
+      const params=new URLSearchParams({key:GOOGLE_API_KEY,singleEvents:"true",orderBy:"startTime",timeMin:min,timeMax:max,maxResults:"2500",timeZone:"Asia/Tokyo"});
+      const url=`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GOOGLE_CALENDAR_ID)}/events?${params}`;
+      const res=await fetch(url,{cache:"no-store"});
+      if(!res.ok) throw new Error(`Google Calendar API ${res.status}`);
+      const data=await res.json();
+      const seen=new Set(),result=[];
+      for(const ev of (data.items||[])){
+        if(ev.status==="cancelled"||!ev.summary) continue;
+        const date=googleDateKey(ev);if(!date)continue;
+        const c=classifyGoogleEvent(ev.summary);if(!c.isExam)continue;
+        const id=`${date}|${c.name}`;if(seen.has(id))continue;seen.add(id);
+        result.push({name:c.name,date,time:googleTime(ev)});
+      }
+      exams=result;
+      calendarState="live";
+      tick();
+    }catch(err){
+      console.error("Google Calendar sync failed",err);
+      calendarState="error";
+      tick();
+    }
+  }
   const pad=n=>String(n).padStart(2,"0");
   const monthEn=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
   const weekJa=["日","月","火","水","木","金","土"];
   const toMillis=item=>item.date?Date.parse(`${item.date}T${item.time||"08:30"}:00+09:00`):null;
   const parts=diff=>{const t=Math.max(0,Math.floor(diff/1000));return{d:Math.floor(t/86400),h:Math.floor((t%86400)/3600),m:Math.floor((t%3600)/60),s:t%60}};
   const nextKnown=now=>exams.filter(x=>x.date&&toMillis(x)>=now).sort((a,b)=>toMillis(a)-toMillis(b))[0];
+  // 日数は日本時間の暦日差で算出。午前0時に切り替わる。
+  function calendarDaysRemaining(target, now){
+    const jstDay=ms=>Math.floor((ms+9*60*60*1000)/86400000);
+    return Math.max(0,jstDay(target)-jstDay(now));
+  }
+
 
   function formatDate(item){
     const [y,m,d]=item.date.split("-").map(Number);
@@ -598,17 +638,16 @@ body{
   function tick(){
     applyDailyCollage();
     const now=Date.now(),main=parts(entrance-now);
-    const digits=String(main.d).padStart(3,"0").slice(-3);
+    const digits=String(calendarDaysRemaining(entrance,now)).padStart(3,"0").slice(-3);
     document.querySelectorAll("#collageDays .heroDigit").forEach((el,i)=>el.textContent=digits[i]);
     document.getElementById("mainRest").textContent=`${pad(main.h)} : ${pad(main.m)} : ${pad(main.s)}`;
     const next=nextKnown(now);
     if(next){
       document.getElementById("nextExamName").textContent=next.name;
       document.getElementById("nextExamDate").textContent=formatDate(next);
-      const r=parts(toMillis(next)-now);
-      document.getElementById("nextExamDays").textContent=r.d;
+      document.getElementById("nextExamDays").textContent=calendarDaysRemaining(toMillis(next),now);
     }else{
-      document.getElementById("nextExamName").textContent="試験日程終了";
+      document.getElementById("nextExamName").textContent=calendarState==="loading"?"Googleカレンダーを確認中":calendarState==="error"?"カレンダー接続エラー":"今後の試験予定なし";
       document.getElementById("nextExamDate").textContent="—";
       document.getElementById("nextExamDays").textContent="—";
     }
@@ -625,6 +664,8 @@ body{
   },{passive:true});
 
   tick(); renderList(Date.now());
+  loadGoogleCalendar();
+  setInterval(loadGoogleCalendar,5*60*1000);
   setInterval(tick,1000);
   setInterval(()=>{if(face===2)renderList(Date.now())},60000);
 })();
